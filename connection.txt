@@ -1,0 +1,1 @@
+mongo "mongodb+srv://cluster0.mjfyw.mongodb.net/" --username root
