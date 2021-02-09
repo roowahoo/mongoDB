@@ -108,3 +108,33 @@ db.listingsAndReviews.find({
 // {} first curly braces is called criteria second {} is projection
 
 
+// Hands-on answers
+db.companies.find({
+    'founded_year':2006
+},{'name':1,'founded_year':1})
+
+db.companies.find({
+    'founded_year':{
+        '$gt':2000
+    }
+},{'name':1,'founded_year':1})
+
+db.companies.find({
+    'founded_year':{
+        '$gt':1900,
+        '$lt':2010
+    }
+},{'name':1,'founded_year':1})
+
+db.companies.find({
+    'ipo.valuation_amount':{
+        '$gt':100000000}
+
+},{'name':1,'ipo.valuation_amount':1,})
+
+db.companies.find({
+    'ipo.valuation_amount':{
+        '$gt':100000000},
+    'ipo.valuation_currency_code':'USD'
+
+},{'name':1,'ipo.valuation_amount':1, 'ipo.valuation_currency_code':1})
