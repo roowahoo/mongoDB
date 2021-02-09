@@ -1,10 +1,10 @@
 // see all databses associated with the user
-show databases;
+show databases
 // to select a specific database
-use sample_airbnb;
+use sample_airbnb
 // **if you use a database whose name does not exist, mongo will assume you want to create a new database.Therefore,show collections first.
 // see collections in a database
-show collections;
+show collections
 // check currently selected database
 db
 // find (all) documents from a collection
@@ -138,3 +138,123 @@ db.companies.find({
     'ipo.valuation_currency_code':'USD'
 
 },{'name':1,'ipo.valuation_amount':1, 'ipo.valuation_currency_code':1})
+
+db.listingsAndReviews.find({
+    'amenities':'Pets allowed'
+},{
+    'name':1,'amenities':1
+}).pretty()
+
+// find all listings that have  BOTH pets allowed
+
+db.listingsAndReviews.find({
+    'amenities':{
+        '$all':['Pets allowed', 'Pets live on this property']
+    }
+},{'name':1,'amenities':1}).pretty()
+
+// find all listings that have wifi OR internet
+db.listingsAndReviews.find({
+    'amenities':{
+        '$in':['Wifi','Internet']
+    }
+},{'name':1,'amenities':1}).pretty()
+
+// find all listings that have been reviewed by reviewer id 6184569
+db.listingsAndReviews.find({
+    'reviews':{
+        '$elemMatch':{
+            'reviewer_id':'6184569'
+        }
+    }},{
+        'name':1,'reviews':{
+        '$elemMatch':{
+            'reviewer_id':'6184569'
+    }}}).limit(5).pretty()
+
+    // Hands on answers
+    db.accounts.find({
+        'products':{
+            '$all':['InvestmentStock']
+        }
+    },{
+        'account_id':1,'products':1
+    })
+
+     db.accounts.find({
+        'products':{
+            '$all':['InvestmentStock','Commodity']
+        }
+    },{
+        'account_id':1,'products':1
+    })
+
+   db.accounts.find({
+        'products':{
+            '$in':['Commodity','CurrencyService']
+        }
+    },{
+        'account_id':1,'products':1
+    })
+    
+    db.accounts.find({
+        'products':{
+            '$ne':'CurrencyService'
+        }
+    },{
+        'account_id':1,'products':1
+    })
+
+    // $ne only excludes one Element. $nin excludes more than 1
+    db.accounts.find({
+        'products':{
+            '$nin':['CurrencyService','Commodity']
+        }
+    },{
+        'account_id':1,'products':1
+    })
+    
+    db.accounts.find({
+        'products':{
+            '$all':['InvestmentStock','InvestmentFund']
+        },
+        'limit':{
+            '$gt':1000
+
+        }
+    },{
+        'account_id':1,'products':1,'limit':1
+    })
+
+    // Compounds criteria
+    // find all listings in brazil or canada
+    db.listingsAndReviews.find({
+        '$or':[
+            {'address.country':'Brazil'},
+            {'address.country':'Canada'}
+        ]
+    },{'name':1,'address.country':1}).pretty()
+
+    // find listings in Brazil or CanvasGradient,but if from Brazil, must have >4 beds
+    db.listingsAndReviews.find({
+        '$or':[
+            {'address.country':'Brazil',
+        'beds':{
+            '$gt':4
+        }},
+        {'address.country':'Canada'}
+        ]
+    },{'name':1,'address.country':1, 'beds':1})
+
+    db.listingsAndReviews.find({
+        '$and':[
+            {'beds':{
+                '$gt':4
+            }},
+            {'$or':{
+                'address.country':'Brazil'
+            }}
+        ]
+    },{})
+
+    
