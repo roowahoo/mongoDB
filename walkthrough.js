@@ -235,7 +235,7 @@ db.listingsAndReviews.find({
         ]
     },{'name':1,'address.country':1}).pretty()
 
-    // find listings in Brazil or CanvasGradient,but if from Brazil, must have >4 beds
+    // find listings in Brazil or Canada,but if from Brazil, must have >4 beds
     db.listingsAndReviews.find({
         '$or':[
             {'address.country':'Brazil',
@@ -246,15 +246,65 @@ db.listingsAndReviews.find({
         ]
     },{'name':1,'address.country':1, 'beds':1})
 
+    // find all listings that are from either Brazil or Canada, with beds >4
+
     db.listingsAndReviews.find({
-        '$and':[
-            {'beds':{
-                '$gt':4
-            }},
-            {'$or':{
-                'address.country':'Brazil'
-            }}
-        ]
-    },{})
+    '$and': [
+        {
+            'beds': {
+                '$gt': 4
+            }
+        },
+        {
+            '$or':[
+                {
+                    'address.country':'Brazil'
+                },
+                {
+                    'address.country':'Canada'
+                }
+            ]
+        }
+    ]
+}, {
+    'name': 1,
+    'address.country': 1,
+    'beds': 1
+}).pretty();
+
+// hands-on answers
+db.inspections.find({
+    'result':'Violation Issued'
+},{
+    'business_name':1,
+    'result':1
+})
+
+db.inspections.find({
+    'result':'Violation Issued',
+    'address.city':'New York'
+},{
+    'business_name':1,
+    'result':1
+})
+
+db.inspections.find({
+    '$and':[
+        {
+            'address.city':'Ridgewood'
+        },
+        {
+            'results':{
+                '$ne':'Violation Issued'
+            }
+        }
+    ]
+},{
+    'business_name':1,
+    'address.city':1,
+    'result':1
+}).pretty()
+                 
+
 
     
